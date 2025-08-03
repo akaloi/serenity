@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serenity Wellness Clinic - Reçete Sistemi</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        body {
+            background: #f8f9fa;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: #212529;
+            line-height: 1.5;
+        }
+        
+        .main-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            margin: 20px auto;
+            max-width: 1400px;
+        }
+        
+        .header-section {
+            background: linear-gradient(135deg, #2c5aa0 0%, #1e4077 100%);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 8px 8px 0 0;
+        }
+        
+        .header-section h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .header-section p {
+            margin-bottom: 0;
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+        
+        .form-section {
+            background: #ffffff;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 24px;
+            margin-bottom: 16px;
+        }
+        
+        .form-section h5 {
+            color: #495057;
+            font-weight: 600;
+            margin-bottom: 20px;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .form-section h5 i {
+            color: #2c5aa0;
+            font-size: 0.9rem;
+        }
+        
+        /* PRESCRIPTION PREVIEW - REAL FORMAT */
+        .prescription-preview {
+            background: white;
+            border: 2px solid #000000;
+            max-width: 800px;
+            margin: 0 auto;
+            font-family: 'Times New Roman', serif;
+            min-height: 900px;
+            page-break-inside: avoid;
+        }
+        
+        /* Header - Simple and professional */
+        .prescription-header {
+            padding: 20px 30px;
+            border-bottom: 2px solid #000000;
+        }
+        
+        .clinic-logo {
+            width: 60px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+        
+        .clinic-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .clinic-details {
+            color: #000000;
+            font-size: 0.85rem;
+            line-height: 1.3;
+            margin-bottom: 8px;
+        }
+        
+        .doctor-info {
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid #cccccc;
+            font-size: 0.8rem;
+            color: #000000;
+        }
+        
+        /* Prescription content */
+        .prescription-content {
+            padding: 25px 30px;
+        }
+        
+        .prescription-number {
+            text-align: right;
+            font-size: 0.85rem;
+            color: #000000;
+            margin-bottom: 15px;
+        }
+        
+        .prescription-number strong {
+            font-weight: 700;
+        }
+        
+        .patient-section {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #cccccc;
+        }
+        
+        .patient-section h6 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+        
+        .patient-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            font-size: 0.85rem;
+            color: #000000;
+        }
+        
+        .patient-details .detail-item {
+            margin-bottom: 4px;
+        }
+        
+        .patient-details strong {
+            font-weight: 600;
+        }
+        
+        .diagnosis-section {
+            margin-bottom: 25px;
+        }
+        
+        .diagnosis-section h6 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+        
+        .diagnosis-text {
+            color: #000000;
+            font-size: 0.85rem;
+            min-height: 30px;
+            padding: 5px 0;
+            border-bottom: 1px dotted #cccccc;
+        }
+        
+        .medications-section {
+            margin-bottom: 30px;
+        }
+        
+        .medications-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+        
+        .medication-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        
+        .medication-table th {
+            background: #f8f9fa;
+            border: 1px solid #000000;
+            padding: 8px;
+            text-align: left;
+            font-weight: 700;
+            color: #000000;
+        }
+        
+        .medication-table td {
+            border: 1px solid #000000;
+            padding: 8px;
+            vertical-align: top;
+            color: #000000;
+        }
+        
+        .medication-name {
+            font-weight: 600;
+        }
+        
+        .no-medications {
+            text-align: center;
+            color: #666666;
+            font-style: italic;
+            padding: 20px 0;
+            font-size: 0.85rem;
+        }
+        
+        /* Doctor signature section */
+        .signature-section {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #cccccc;
+        }
+        
+        .signature-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 30px;
+        }
+        
+        .signature-box {
+            text-align: center;
+        }
+        
+        .signature-content {
+            width: 200px;
+            height: 60px;
+            margin: 0 auto 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: none !important;
+        }
+        
+        .signature-image {
+            max-width: 180px;
+            max-height: 50px;
+            object-fit: contain;
+            border: none !important;
+        }
+        
+        .signature-placeholder {
+            color: #999;
+            font-size: 0.8rem;
+            font-style: italic;
+        }
+        
+        .signature-label {
+            font-size: 0.8rem;
+            color: #000000;
+            font-weight: 600;
+        }
+        
+        /* DOCTOR STAMP/SEAL - TAMAMEN TEMİZ */
+        .doctor-stamp {
+            width: 180px;
+            height: 60px;
+            border: 2px solid #000000;
+            margin: 0 auto 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: #000000;
+            line-height: 1.1;
+            text-align: center;
+            background: white;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        .stamp-line {
+            margin: 1px 0;
+        }
+        
+        .stamp-clinic {
+            font-size: 0.65rem;
+            font-weight: 600;
+        }
+        
+        .stamp-doctor {
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+        
+        .stamp-specialty {
+            font-size: 0.6rem;
+            font-weight: 600;
+        }
+        
+        /* Form Styling */
+        .form-control, .form-select {
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            padding: 8px 12px;
+            font-size: 0.875rem;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: #2c5aa0;
+            box-shadow: 0 0 0 0.2rem rgba(44, 90, 160, 0.25);
+        }
+        
+        .btn-primary {
+            background: #2c5aa0;
+            border-color: #2c5aa0;
+            font-weight: 500;
+        }
+        
+        .btn-primary:hover {
+            background: #1e4077;
+            border-color: #1e4077;
+        }
+        
+        .medication-form {
+            background: #f8f9ff;
+            border: 1px solid #e3f2fd;
+            border-radius: 6px;
+            padding: 16px;
+            margin-top: 16px;
+        }
+        
+        .medication-list-item {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 12px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .disclaimer {
+            background: #fff9e6;
+            border: 1px solid #ffeaa7;
+            border-radius: 4px;
+            padding: 12px;
+            margin: 20px 30px;
+            font-size: 0.7rem;
+            color: #8b6914;
+            text-align: center;
+        }
+        
+        @media print {
+            body { 
+                background: white !important; 
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .btn, .form-section, .col-lg-5 { display: none !important; }
+            .main-container { 
+                box-shadow: none !important; 
+                margin: 0 !important;
+                max-width: none !important;
+            }
+            .col-lg-7 { width: 100% !important; }
+            .prescription-preview { 
+                border: 2px solid #000 !important;
+                page-break-inside: avoid;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .patient-details {
+                grid-template-columns: 1fr !important;
+                gap: 8px !important;
+            }
+            
+            .signature-row {
+                grid-template-columns: 1fr !important;
+                gap: 20px !important;
+            }
+            
+            .prescription-preview {
+                margin: 10px;
+                font-size: 0.9rem;
+            }
+            
+            .prescription-header,
+            .prescription-content {
+                padding: 15px 20px;
+            }
+            
+            .doctor-stamp {
+                width: 160px;
+                height: 55px;
+                font-size: 0.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="main-container">
+            <!-- Header -->
+            <div class="header-section">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h1><i class="fas fa-prescription-bottle-alt me-2"></i>Dijital Reçete Sistemi</h1>
+                        <p>Serenity Wellness Clinic & Research</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="container-fluid p-4">
+                <div class="row">
+                    <!-- Form Section -->
+                    <div class="col-lg-5">
+                        <div class="form-section">
+                            <h5><i class="fas fa-user-md"></i>Doktor Bilgileri</h5>
+                            
+                            <div class="mb-3">
+                                <label class="form-label text-muted small">Doktor Adı Soyadı</label>
+                                <input type="text" class="form-control" id="doctorName" placeholder="Dr. İsim Soyisim">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label text-muted small">Uzmanlık Alanı</label>
+                                <select class="form-select" id="doctorSpecialty">
+                                    <option value="">Seçiniz</option>
+                                    <option value="Genel Hekim">Genel Hekim</option>
+                                    <option value="Dahiliye Uzmanı">Dahiliye Uzmanı</option>
+                                    <option value="Kardiyoloji Uzmanı">Kardiyoloji Uzmanı</option>
+                                    <option value="Nöroloji Uzmanı">Nöroloji Uzmanı</option>
+                                    <option value="Ortopedi ve Travmatoloji Uzmanı">Ortopedi ve Travmatoloji Uzmanı</option>
+                                    <option value="Göz Hastalıkları Uzmanı">Göz Hastalıkları Uzmanı</option>
+                                    <option value="Kulak Burun Boğaz Uzmanı">Kulak Burun Boğaz Uzmanı</option>
+                                    <option value="Kadın Hastalıkları ve Doğum Uzmanı">Kadın Hastalıkları ve Doğum Uzmanı</option>
+                                    <option value="Üroloji Uzmanı">Üroloji Uzmanı</option>
+                                    <option value="Diş Hekimi">Diş Hekimi</option>
+                                    <option value="Psikiyatrist">Psikiyatrist</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label text-muted small">Doktor İmzası (PNG)</label>
+                                <input type="file" class="form-control" id="signatureUpload" accept="image/png" onchange="handleSignatureUpload(event)">
+                                <div class="form-text">PNG formatında şeffaf arka planlı imza yükleyiniz</div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h5><i class="fas fa-user"></i>Hasta Bilgileri</h5>
+                            
+                            <div class="row mb-3">
+                                <div class="col-8">
+                                    <label class="form-label text-muted small">Hasta Adı Soyadı</label>
+                                    <input type="text" class="form-control" id="patientName" placeholder="Hasta adı ve soyadı">
+                                </div>
+                                <div class="col-4">
+                                    <label class="form-label text-muted small">Yaş</label>
+                                    <input type="number" class="form-control" id="patientAge" placeholder="25" min="1" max="120">
+                                </div>
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    <label class="form-label text-muted small">Kimlik Numarası</label>
+                                    <input type="text" class="form-control" id="patientID" placeholder="12345678901" maxlength="11">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label text-muted small">Telefon</label>
+                                    <input type="tel" class="form-control" id="patientPhone" placeholder="48848255">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h5><i class="fas fa-stethoscope"></i>Tanı</h5>
+                            
+                            <div class="mb-3">
+                                <label class="form-label text-muted small">Tanı Açıklaması</label>
+                                <textarea class="form-control" id="diagnosis" rows="3" placeholder="Hastanın tanısını giriniz..."></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h5><i class="fas fa-pills"></i>İlaç Ekle</h5>
+                            
+                            <div class="mb-2">
+                                <label class="form-label text-muted small">İlaç Adı</label>
+                                <input type="text" class="form-control" id="medicationName" placeholder="İlaç adı">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label text-muted small">Doz/Kullanım</label>
+                                <input type="text" class="form-control" id="medicationDosage" placeholder="500mg">
+                            </div>
+                            
+                            <button class="btn btn-primary btn-sm" onclick="addMedication()">
+                                <i class="fas fa-plus me-1"></i>İlaç Ekle
+                            </button>
+                            
+                            <div id="medicationList" class="mt-3"></div>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-primary" onclick="updatePreview()">
+                                <i class="fas fa-sync me-2"></i>Reçeteyi Güncelle
+                            </button>
+                            <div class="row g-2">
+                                <div class="col-4">
+                                    <button class="btn btn-success w-100 btn-sm" onclick="downloadAsImage()">
+                                        <i class="fas fa-download me-1"></i>PNG
+                                    </button>
+                                </div>
+                                <div class="col-4">
+                                    <button class="btn btn-info w-100 btn-sm" onclick="printPrescription()">
+                                        <i class="fas fa-print me-1"></i>Yazdır
+                                    </button>
+                                </div>
+                                <div class="col-4">
+                                    <button class="btn btn-secondary w-100 btn-sm" onclick="resetForm()">
+                                        <i class="fas fa-redo me-1"></i>Temizle
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Preview Section -->
+                    <div class="col-lg-7">
+                        <div class="prescription-preview" id="prescriptionPreview">
+                            <!-- Header -->
+                            <div class="prescription-header">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <img src="https://i.imgur.com/kHvPwIQ.png" alt="Serenity Logo" class="clinic-logo">
+                                        <div class="clinic-name">Serenity Wellness Clinic & Research</div>
+                                        <div class="clinic-details">
+                                            Hawick Avenue / Boulevard Del Perro<br>
+                                            Tel: 48848255 | E-posta: info@serenity.com
+                                        </div>
+                                        <div class="doctor-info">
+                                            <strong>Dr. <span id="previewDoctorName">_____________</span></strong> | 
+                                            <span id="previewDoctorSpecialty">_____________</span>
+                                        </div>
+                                    </div>
+                                    <div class="text-end">
+                                        <div style="font-size: 0.85rem; color: #000000; font-weight: 600;">
+                                            <strong>Tarih:</strong> <span id="previewDate">_______________</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Content -->
+                            <div class="prescription-content">
+                                <div class="prescription-number">
+                                    <strong>Reçete No:</strong> <span id="previewPrescriptionNumber">RX-2025-0001</span>
+                                </div>
+                                
+                                <!-- Patient Info -->
+                                <div class="patient-section">
+                                    <h6>Hasta Bilgileri</h6>
+                                    <div class="patient-details">
+                                        <div>
+                                            <div class="detail-item"><strong>Ad Soyad:</strong> <span id="previewPatientName">_________________</span></div>
+                                            <div class="detail-item"><strong>Yaş:</strong> <span id="previewPatientAge">____</span></div>
+                                        </div>
+                                        <div>
+                                            <div class="detail-item"><strong>Kimlik No:</strong> <span id="previewPatientID">___________</span></div>
+                                            <div class="detail-item"><strong>Telefon:</strong> <span id="previewPatientPhone">___________</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Diagnosis -->
+                                <div class="diagnosis-section">
+                                    <h6>Tanı</h6>
+                                    <div class="diagnosis-text" id="previewDiagnosis">________________________</div>
+                                </div>
+                                
+                                <!-- Medications -->
+                                <div class="medications-section">
+                                    <div class="medications-title">Reçete Edilen İlaçlar</div>
+                                    <div id="previewMedications">
+                                        <div class="no-medications">Henüz ilaç eklenmedi</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Signature -->
+                                <div class="signature-section">
+                                    <div class="signature-row">
+                                        <div class="signature-box">
+                                            <div class="signature-content" id="signatureContent">
+                                                <div class="signature-placeholder">Doktor İmzası</div>
+                                            </div>
+                                            <div class="signature-label" id="signatureLabel">Dr. ____________</div>
+                                        </div>
+                                        <div class="signature-box">
+                                            <div class="signature-label">Kaşe/Mühür</div>
+                                            <div class="doctor-stamp" id="doctorStamp">
+                                                <div class="stamp-line stamp-clinic">Serenity Wellness Clinic</div>
+                                                <div class="stamp-line stamp-doctor">Dr. <span id="stampDoctorName">____________</span></div>
+                                                <div class="stamp-line stamp-specialty" id="stampSpecialty">____________</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Disclaimer -->
+                            <div class="disclaimer">
+                                <strong>UYARI:</strong> Bu reçetenin gerçek hayatla herhangi bir ilgisi bulunmamaktadır. 
+                                GTA:W Türkiye oyun sunucusu için rol yapma amacıyla hazırlanmıştır.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let medications = [];
+        let medicationCounter = 0;
+        let signatureImage = null;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            generatePrescriptionNumber();
+            updateDateFormat();
+            updatePreview();
+        });
+
+        function updateDateFormat() {
+            const today = new Date();
+            const months = ['OCA', 'ŞUB', 'MAR', 'NİS', 'MAY', 'HAZ', 'TEM', 'AGU', 'EYL', 'EKİ', 'KAS', 'ARA'];
+            const day = today.getDate();
+            const month = months[today.getMonth()];
+            const year = today.getFullYear();
+            const formattedDate = `${day}/${month}/${year}`;
+            document.getElementById('previewDate').textContent = formattedDate;
+        }
+
+        function generatePrescriptionNumber() {
+            const randomNum = Math.floor(Math.random() * 9999) + 1;
+            const prescriptionNumber = `RX-2025-${randomNum.toString().padStart(4, '0')}`;
+            document.getElementById('previewPrescriptionNumber').textContent = prescriptionNumber;
+        }
+
+        function handleSignatureUpload(event) {
+            const file = event.target.files[0];
+            if (file && file.type === 'image/png') {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    signatureImage = e.target.result;
+                    updateSignaturePreview();
+                };
+                reader.readAsDataURL(file);
+            } else {
+                alert('Lütfen PNG formatında bir dosya yükleyiniz!');
+                event.target.value = '';
+            }
+        }
+
+        function updateSignaturePreview() {
+            const signatureContent = document.getElementById('signatureContent');
+            if (signatureImage) {
+                signatureContent.innerHTML = `<img src="${signatureImage}" alt="Doktor İmzası" class="signature-image">`;
+            } else {
+                signatureContent.innerHTML = '<div class="signature-placeholder">Doktor İmzası</div>';
+            }
+        }
+
+        function addMedication() {
+            const name = document.getElementById('medicationName').value.trim();
+            const dosage = document.getElementById('medicationDosage').value.trim();
+            
+            if (!name || !dosage) {
+                alert('Lütfen ilaç adı ve doz bilgilerini doldurunuz!');
+                return;
+            }
+
+            const medication = {
+                id: ++medicationCounter,
+                name: name,
+                dosage: dosage
+            };
+
+            medications.push(medication);
+            renderMedicationList();
+            
+            // Clear form
+            document.getElementById('medicationName').value = '';
+            document.getElementById('medicationDosage').value = '';
+            
+            updatePreview();
+        }
+
+        function renderMedicationList() {
+            const container = document.getElementById('medicationList');
+            
+            if (medications.length === 0) {
+                container.innerHTML = '<div class="text-muted small">Eklenen ilaç yok</div>';
+                return;
+            }
+
+            let html = '<div class="small text-muted mb-2">Eklenen İlaçlar:</div>';
+            medications.forEach(medication => {
+                html += `
+                    <div class="medication-list-item">
+                        <div class="flex-grow-1">
+                            <div class="fw-medium">${medication.name}</div>
+                            <div class="small text-muted">${medication.dosage}</div>
+                        </div>
+                        <button class="btn btn-outline-danger btn-sm" onclick="removeMedication(${medication.id})">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        function removeMedication(id) {
+            medications = medications.filter(med => med.id !== id);
+            renderMedicationList();
+            updatePreview();
+        }
+
+        function updatePreview() {
+            // Update doctor info
+            const doctorName = document.getElementById('doctorName').value || '_____________';
+            const doctorSpecialty = document.getElementById('doctorSpecialty').value || '_____________';
+            
+            document.getElementById('previewDoctorName').textContent = doctorName;
+            document.getElementById('previewDoctorSpecialty').textContent = doctorSpecialty;
+            
+            // Update signature label with doctor name
+            document.getElementById('signatureLabel').textContent = doctorName || 'Dr. ____________';
+            
+            // Update stamp with doctor info - TEMİZ MÜHÜR
+            document.getElementById('stampDoctorName').textContent = doctorName.replace('Dr. ', '');
+            document.getElementById('stampSpecialty').textContent = doctorSpecialty;
+            
+            // Update patient info
+            document.getElementById('previewPatientName').textContent = 
+                document.getElementById('patientName').value || '_________________';
+            document.getElementById('previewPatientAge').textContent = 
+                document.getElementById('patientAge').value || '____';
+            document.getElementById('previewPatientID').textContent = 
+                document.getElementById('patientID').value || '___________';
+            document.getElementById('previewPatientPhone').textContent = 
+                document.getElementById('patientPhone').value || '___________';
+            
+            // Update diagnosis
+            document.getElementById('previewDiagnosis').textContent = 
+                document.getElementById('diagnosis').value || '________________________';
+
+            // Update medications
+            const medicationsContainer = document.getElementById('previewMedications');
+            
+            if (medications.length === 0) {
+                medicationsContainer.innerHTML = '<div class="no-medications">Henüz ilaç eklenmedi</div>';
+            } else {
+                let html = `
+                    <table class="medication-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 10%;">No</th>
+                                <th style="width: 50%;">İlaç Adı</th>
+                                <th style="width: 40%;">Doz/Kullanım</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+                
+                medications.forEach((medication, index) => {
+                    html += `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td class="medication-name">${medication.name}</td>
+                            <td>${medication.dosage}</td>
+                        </tr>
+                    `;
+                });
+                
+                html += `
+                        </tbody>
+                    </table>
+                `;
+                medicationsContainer.innerHTML = html;
+            }
+        }
+
+        function downloadAsImage() {
+            const element = document.getElementById('prescriptionPreview');
+            const patientName = document.getElementById('patientName').value || 'Hasta';
+            const prescriptionNumber = document.getElementById('previewPrescriptionNumber').textContent;
+            
+            html2canvas(element, {
+                scale: 2,
+                useCORS: true,
+                allowTaint: true,
+                backgroundColor: '#ffffff',
+                logging: false,
+                imageTimeout: 0
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `Serenity-Recete-${prescriptionNumber}-${patientName.replace(/\s+/g, '_')}.png`;
+                link.href = canvas.toDataURL('image/png', 1.0);
+                link.click();
+            }).catch(error => {
+                console.error('Resim indirme hatası:', error);
+                alert('Resim indirme sırasında bir hata oluştu. Lütfen tekrar deneyiniz.');
+            });
+        }
+
+        function printPrescription() {
+            window.print();
+        }
+
+        function resetForm() {
+            // Clear all form fields
+            document.getElementById('doctorName').value = '';
+            document.getElementById('doctorSpecialty').value = '';
+            document.getElementById('signatureUpload').value = '';
+            document.getElementById('patientName').value = '';
+            document.getElementById('patientAge').value = '';
+            document.getElementById('patientID').value = '';
+            document.getElementById('patientPhone').value = '';
+            document.getElementById('diagnosis').value = '';
+            document.getElementById('medicationName').value = '';
+            document.getElementById('medicationDosage').value = '';
+            
+            // Clear medications and signature
+            medications = [];
+            medicationCounter = 0;
+            signatureImage = null;
+            
+            renderMedicationList();
+            updateSignaturePreview();
+            
+            // Generate new prescription number
+            generatePrescriptionNumber();
+            
+            updatePreview();
+        }
+
+        // Auto update preview when form fields change
+        document.addEventListener('input', function(e) {
+            if (e.target.matches('input, select, textarea')) {
+                updatePreview();
+            }
+        });
+
+        // ID validation
+        document.getElementById('patientID').addEventListener('input', function(e) {
+            e.target.value = e.target.value.replace(/\D/g, '').slice(0, 11);
+        });
+    </script>
+</body>
+</html>
