@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serenity Wellness Clinic - Fatura Sistemi</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        body {
+            background: #f8f9fa;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: #212529;
+            line-height: 1.5;
+        }
+        
+        .main-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            margin: 20px auto;
+            max-width: 1400px;
+        }
+        
+        .header-section {
+            background: #ffffff;
+            border-bottom: 1px solid #e9ecef;
+            padding: 20px 30px;
+            border-radius: 8px 8px 0 0;
+        }
+        
+        .header-section h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: #495057;
+        }
+        
+        .header-section p {
+            margin-bottom: 0;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .form-section {
+            background: #ffffff;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 24px;
+            margin-bottom: 16px;
+        }
+        
+        .form-section h5 {
+            color: #495057;
+            font-weight: 600;
+            margin-bottom: 20px;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .form-section h5 i {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        /* ŞABLON SEÇİCİSİ */
+        .template-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .template-option {
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            padding: 12px 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: white;
+        }
+        
+        .template-option:hover {
+            border-color: #0d6efd;
+            background: #f8f9ff;
+        }
+        
+        .template-option.active {
+            border-color: #0d6efd;
+            background: #e3f2fd;
+        }
+        
+        .template-option i {
+            font-size: 1.2rem;
+            margin-bottom: 6px;
+            display: block;
+        }
+        
+        .template-option span {
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        /* İNDİRİM SECTİONU */
+        .discount-section {
+            background: #f8f9ff;
+            border: 1px solid #e3f2fd;
+            border-radius: 6px;
+            padding: 16px;
+            margin-top: 16px;
+        }
+        
+        .discount-toggle {
+            cursor: pointer;
+            font-weight: 500;
+            color: #495057;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .discount-controls {
+            margin-top: 12px;
+            display: none;
+        }
+        
+        .discount-controls.show {
+            display: block;
+        }
+        
+        /* INVOICE PREVIEW - TEMA SİSTEMİ */
+        .invoice-preview {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            max-width: 800px;
+            margin: 0 auto;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        /* MODERN TEMA (varsayılan) */
+        .theme-modern .invoice-header {
+            padding: 40px 40px 30px;
+            border-bottom: 2px solid #f8f9fa;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+        
+        .theme-modern .clinic-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #212529;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+        
+        .theme-modern .invoice-title {
+            font-size: 2rem;
+            font-weight: 300;
+            color: #495057;
+            margin-bottom: 16px;
+            letter-spacing: 0.02em;
+        }
+        
+        /* KLASİK TEMA */
+        .theme-classic .invoice-header {
+            padding: 30px 40px;
+            border-bottom: 3px solid #212529;
+            text-align: center;
+        }
+        
+        .theme-classic .clinic-name {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #212529;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .theme-classic .invoice-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #212529;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        
+        .theme-classic .bill-to-section {
+            padding: 25px 40px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+            display: block;
+        }
+        
+        .theme-classic .bill-to {
+            margin-bottom: 20px;
+        }
+        
+        /* MİNİMAL TEMA */
+        .theme-minimal .invoice-header {
+            padding: 50px 40px 40px;
+            border-bottom: 1px solid #e9ecef;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+        
+        .theme-minimal .clinic-name {
+            font-size: 1.2rem;
+            font-weight: 400;
+            color: #495057;
+            margin-bottom: 6px;
+        }
+        
+        .theme-minimal .invoice-title {
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: #212529;
+            margin-bottom: 16px;
+        }
+        
+        .theme-minimal .services-table thead th {
+            background: white;
+            border-bottom: 2px solid #212529;
+            font-weight: 400;
+            text-transform: none;
+        }
+        
+        /* KURUMSAL TEMA */
+        .theme-corporate .invoice-header {
+            padding: 35px 40px;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+        }
+        
+        .theme-corporate .clinic-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 8px;
+        }
+        
+        .theme-corporate .clinic-details {
+            color: rgba(255,255,255,0.9);
+        }
+        
+        .theme-corporate .invoice-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 16px;
+        }
+        
+        .theme-corporate .invoice-meta {
+            color: rgba(255,255,255,0.9);
+        }
+        
+        .theme-corporate .services-table thead th {
+            background: #34495e;
+            color: white;
+        }
+        
+        /* ORTAK STILLER */
+        .clinic-info {
+            text-align: left;
+        }
+        
+        .clinic-logo {
+            width: 80px;
+            height: auto;
+            margin-bottom: 16px;
+        }
+        
+        .clinic-details {
+            color: #6c757d;
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+        
+        .clinic-details div {
+            margin-bottom: 2px;
+        }
+        
+        .invoice-title-section {
+            text-align: right;
+        }
+        
+        .invoice-meta {
+            color: #6c757d;
+            font-size: 0.875rem;
+        }
+        
+        .invoice-meta div {
+            margin-bottom: 8px;
+        }
+        
+        .invoice-number {
+            font-weight: 600;
+            color: #212529;
+            font-size: 1rem;
+        }
+        
+        /* Bill to section */
+        .bill-to-section {
+            padding: 30px 40px;
+            background: #fafbfc;
+            border-bottom: 1px solid #e9ecef;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+        
+        .bill-to h6 {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #6c757d;
+            margin-bottom: 12px;
+        }
+        
+        .bill-to-details {
+            color: #495057;
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+        
+        .bill-to-details div {
+            margin-bottom: 4px;
+        }
+        
+        .patient-name {
+            font-weight: 600;
+            color: #212529;
+            font-size: 0.95rem;
+        }
+        
+        /* Services table */
+        .services-section {
+            padding: 0;
+        }
+        
+        .services-table {
+            width: 100%;
+            margin: 0;
+            border-collapse: collapse;
+        }
+        
+        .services-table thead th {
+            background: #f8f9fa;
+            color: #495057;
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            padding: 16px 20px;
+            border: none;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .services-table thead th:first-child {
+            text-align: left;
+            padding-left: 40px;
+        }
+        
+        .services-table thead th:last-child {
+            text-align: right;
+            padding-right: 40px;
+        }
+        
+        .services-table tbody td {
+            padding: 16px 20px;
+            border: none;
+            border-bottom: 1px solid #f8f9fa;
+            color: #495057;
+            font-size: 0.875rem;
+        }
+        
+        .services-table tbody td:first-child {
+            padding-left: 40px;
+            font-weight: 500;
+        }
+        
+        .services-table tbody td:last-child {
+            padding-right: 40px;
+            text-align: right;
+            font-weight: 600;
+        }
+        
+        .services-table tbody tr:hover {
+            background: #fafbfc;
+        }
+        
+        .no-services {
+            padding: 40px;
+            text-align: center;
+            color: #6c757d;
+            font-style: italic;
+        }
+        
+        /* Total section */
+        .total-section {
+            padding: 30px 40px 40px;
+            background: white;
+        }
+        
+        .total-grid {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 40px;
+            align-items: end;
+        }
+        
+        .notes-section h6 {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #6c757d;
+            margin-bottom: 8px;
+        }
+        
+        .notes-content {
+            color: #495057;
+            font-size: 0.875rem;
+            line-height: 1.6;
+            max-width: 300px;
+        }
+        
+        .total-breakdown {
+            text-align: right;
+            min-width: 200px;
+        }
+        
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #f8f9fa;
+        }
+        
+        .total-row:last-child {
+            border-bottom: 2px solid #212529;
+            padding-top: 12px;
+            margin-top: 8px;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        
+        .total-label {
+            color: #6c757d;
+            font-size: 0.875rem;
+        }
+        
+        .total-amount {
+            color: #212529;
+            font-weight: 600;
+        }
+        
+        .final-total .total-label {
+            color: #212529;
+            font-weight: 700;
+        }
+        
+        .discount-row {
+            color: #dc3545;
+        }
+        
+        .discount-row .total-label {
+            color: #dc3545;
+        }
+        
+        .discount-row .total-amount {
+            color: #dc3545;
+        }
+        
+        /* Disclaimer */
+        .disclaimer {
+            background: #fff9e6;
+            border: 1px solid #ffeaa7;
+            border-radius: 4px;
+            padding: 16px;
+            margin: 20px 40px 40px;
+            font-size: 0.75rem;
+            color: #8b6914;
+            text-align: center;
+            line-height: 1.4;
+        }
+        
+        /* Form styling */
+        .form-control, .form-select {
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            padding: 8px 12px;
+            font-size: 0.875rem;
+            transition: border-color 0.15s ease-in-out;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: #86b7fe;
+            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+        }
+        
+        .btn-primary {
+            background: #0d6efd;
+            border-color: #0d6efd;
+            font-weight: 500;
+            padding: 8px 16px;
+            font-size: 0.875rem;
+        }
+        
+        .btn-success {
+            background: #198754;
+            border-color: #198754;
+        }
+        
+        .btn-info {
+            background: #0dcaf0;
+            border-color: #0dcaf0;
+            color: #000;
+        }
+        
+        .service-item {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 16px;
+            margin-bottom: 8px;
+        }
+        
+        .service-item:hover {
+            background: #e9ecef;
+        }
+        
+        @media print {
+            body { background: white !important; }
+            .btn, .form-section, .col-lg-5 { display: none !important; }
+            .main-container { box-shadow: none !important; margin: 0 !important; }
+            .col-lg-7 { width: 100% !important; }
+            .invoice-preview { border: none !important; }
+        }
+        
+        @media (max-width: 768px) {
+            .invoice-header {
+                grid-template-columns: 1fr !important;
+                gap: 20px !important;
+                padding: 30px 20px 20px !important;
+            }
+            
+            .invoice-title-section {
+                text-align: left !important;
+            }
+            
+            .bill-to-section {
+                grid-template-columns: 1fr !important;
+                gap: 20px !important;
+                padding: 20px !important;
+            }
+            
+            .services-table thead th:first-child,
+            .services-table tbody td:first-child {
+                padding-left: 20px !important;
+            }
+            
+            .services-table thead th:last-child,
+            .services-table tbody td:last-child {
+                padding-right: 20px !important;
+            }
+            
+            .total-grid {
+                grid-template-columns: 1fr !important;
+                gap: 20px !important;
+            }
+            
+            .total-section {
+                padding: 20px !important;
+            }
+            
+            .disclaimer {
+                margin: 20px !important;
+            }
+            
+            .template-selector {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="main-container">
+            <!-- Header -->
+            <div class="header-section">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h1><i class="fas fa-file-invoice me-2"></i>Fatura Yönetim Sistemi</h1>
+                        <p>Serenity Wellness Clinic & Research</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="container-fluid p-4">
+                <div class="row">
+                    <!-- Form Section -->
+                    <div class="col-lg-5">
+                        <!-- Şablon Seçimi -->
+                        <div class="form-section">
+                            <h5><i class="fas fa-palette"></i>Şablon Seçimi</h5>
+                            
+                            <div class="template-selector">
+                                <div class="template-option active" data-theme="modern">
+                                    <i class="fas fa-laptop"></i>
+                                    <span>Modern</span>
+                                </div>
+                                <div class="template-option" data-theme="classic">
+                                    <i class="fas fa-university"></i>
+                                    <span>Klasik</span>
+                                </div>
+                                <div class="template-option" data-theme="minimal">
+                                    <i class="fas fa-minus"></i>
+                                    <span>Minimal</span>
+                                </div>
+                                <div class="template-option" data-theme="corporate">
+                                    <i class="fas fa-building"></i>
+                                    <span>Kurumsal</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h5><i class="fas fa-info-circle"></i>Fatura Bilgileri</h5>
+                            
+                            <div class="row mb-3">
+                                <div class="col-7">
+                                    <label class="form-label text-muted small">Fatura Numarası</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="invoiceNumber" readonly>
+                                        <button class="btn btn-outline-secondary btn-sm" type="button" onclick="generateInvoiceNumber()">
+                                            <i class="fas fa-refresh"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-5">
+                                    <label class="form-label text-muted small">Tarih</label>
+                                    <input type="date" class="form-control" id="invoiceDate">
+                                </div>
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <div class="col-8">
+                                    <label class="form-label text-muted small">Hasta Adı Soyadı</label>
+                                    <input type="text" class="form-control" id="patientName" placeholder="Hasta adı ve soyadı">
+                                </div>
+                                <div class="col-4">
+                                    <label class="form-label text-muted small">Telefon</label>
+                                    <input type="tel" class="form-control" id="patientPhone" placeholder="Telefon">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h5><i class="fas fa-plus-circle"></i>Hizmet Ekle</h5>
+                            
+                            <div class="mb-3">
+                                <label class="form-label text-muted small">Hizmet Seçimi</label>
+                                <select class="form-select" id="serviceSelect">
+                                    <option value="">Hizmet seçiniz</option>
+                                    <optgroup label="Muayene Hizmetleri">
+                                        <option value="general|4000">Genel Hekimlik Muayenesi - $4,000</option>
+                                        <option value="specialist|6000">Uzmanlık Muayenesi - $6,000</option>
+                                        <option value="urgent|3000">Urgent Care - $3,000</option>
+                                    </optgroup>
+                                    <optgroup label="Test ve Görüntüleme">
+                                        <option value="mr|5000">MR - $5,000</option>
+                                        <option value="ct|3500">CT (BT) - $3,500</option>
+                                        <option value="xray|1500">Röntgen - $1,500</option>
+                                        <option value="ultrasound|1500">Ultrason - $1,500</option>
+                                        <option value="bloodtest|1000">Laboratuvar Tahlilleri - $1,000</option>
+                                    </optgroup>
+                                    <optgroup label="Operasyon ve Yatış">
+                                        <option value="surgery|25000">Cerrahi Operasyon - $10,000-50,000</option>
+                                        <option value="hospitalization|1000">Yatış (günlük) - $1,000</option>
+                                    </optgroup>
+                                    <optgroup label="Klinik Paketleri">
+                                        <option value="checkup|7500">Genel Check-Up - $7,500</option>
+                                        <option value="birth|45000">Doğum Paketi - $45,000</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+                            
+                            <button class="btn btn-primary btn-sm" onclick="addService()">
+                                <i class="fas fa-plus me-1"></i>Ekle
+                            </button>
+                            
+                            <div id="selectedServices" class="mt-3"></div>
+                            
+                            <!-- İndirim Sistemi -->
+                            <div class="discount-section">
+                                <div class="discount-toggle" onclick="toggleDiscount()">
+                                    <i class="fas fa-percent"></i>
+                                    <span>İndirim Uygula</span>
+                                    <i class="fas fa-chevron-down ms-auto" id="discountChevron"></i>
+                                </div>
+                                <div class="discount-controls" id="discountControls">
+                                    <div class="row mt-2">
+                                        <div class="col-6">
+                                            <label class="form-label small">İndirim Türü</label>
+                                            <select class="form-select form-select-sm" id="discountType">
+                                                <option value="percent">Yüzde (%)</option>
+                                                <option value="amount">Tutar ($)</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="form-label small">İndirim Miktarı</label>
+                                            <input type="number" class="form-control form-control-sm" id="discountValue" 
+                                                   min="0" max="100" value="0" onchange="updatePreview()">
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col-12">
+                                            <label class="form-label small">İndirim Açıklaması</label>
+                                            <input type="text" class="form-control form-control-sm" id="discountReason" 
+                                                   placeholder="Örn: Sigorta indirimi, İlk hasta indirimi">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h5><i class="fas fa-sticky-note"></i>Notlar</h5>
+                            <textarea class="form-control" id="notes" rows="3" placeholder="Tedavi detayları veya özel notlar..."></textarea>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-primary" onclick="updatePreview()">
+                                <i class="fas fa-sync me-2"></i>Faturayı Güncelle
+                            </button>
+                            <div class="row g-2">
+                                <div class="col-4">
+                                    <button class="btn btn-success w-100 btn-sm" onclick="downloadAsImage()">
+                                        <i class="fas fa-download me-1"></i>PNG
+                                    </button>
+                                </div>
+                                <div class="col-4">
+                                    <button class="btn btn-info w-100 btn-sm" onclick="printInvoice()">
+                                        <i class="fas fa-print me-1"></i>Yazdır
+                                    </button>
+                                </div>
+                                <div class="col-4">
+                                    <button class="btn btn-secondary w-100 btn-sm" onclick="resetForm()">
+                                        <i class="fas fa-redo me-1"></i>Temizle
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Preview Section -->
+                    <div class="col-lg-7">
+                        <div class="invoice-preview theme-modern" id="invoicePreview">
+                            <!-- Header -->
+                            <div class="invoice-header">
+                                <div class="clinic-info">
+                                    <img src="https://i.imgur.com/kHvPwIQ.png" alt="Serenity Logo" class="clinic-logo">
+                                    <div class="clinic-name">Serenity Wellness Clinic & Research</div>
+                                    <div class="clinic-details">
+                                        <div>Hawick Avenue / Boulevard Del Perro</div>
+                                        <div>info@serenity.com</div>
+                                        <div>Banka Hesap: 0300 7657 0</div>
+                                    </div>
+                                </div>
+                                <div class="invoice-title-section">
+                                    <div class="invoice-title">FATURA</div>
+                                    <div class="invoice-meta">
+                                        <div><strong>Fatura No:</strong> <span class="invoice-number" id="previewInvoiceNumber">-</span></div>
+                                        <div><strong>Tarih:</strong> <span id="previewDate">-</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Bill To -->
+                            <div class="bill-to-section">
+                                <div class="bill-to">
+                                    <h6>Fatura Kesilecek</h6>
+                                    <div class="bill-to-details">
+                                        <div class="patient-name" id="previewPatientName">-</div>
+                                        <div id="previewPatientPhone">-</div>
+                                    </div>
+                                </div>
+                                <div class="bill-to">
+                                    <h6>Ödeme Şartları</h6>
+                                    <div class="bill-to-details">
+                                        <div>Fatura kesim tarihinden itibaren 7 gün içerisinde ödemenin yapılması gerekmektedir.</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Services -->
+                            <div class="services-section">
+                                <table class="services-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Hizmet Açıklaması</th>
+                                            <th style="text-align: center; width: 80px;">Adet</th>
+                                            <th style="text-align: right; width: 120px;">Birim Fiyat</th>
+                                            <th style="text-align: right; width: 120px;">Tutar</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="previewServices">
+                                        <tr>
+                                            <td colspan="4" class="no-services">Henüz hizmet eklenmedi</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <!-- Total -->
+                            <div class="total-section">
+                                <div class="total-grid">
+                                    <div class="notes-section">
+                                        <h6>Notlar</h6>
+                                        <div class="notes-content" id="previewNotes">-</div>
+                                    </div>
+                                    <div class="total-breakdown">
+                                        <div class="total-row">
+                                            <div class="total-label">Ara Toplam</div>
+                                            <div class="total-amount">$<span id="subtotalAmount">0.00</span></div>
+                                        </div>
+                                        <div class="total-row discount-row" id="discountRow" style="display: none;">
+                                            <div class="total-label">İndirim (<span id="discountLabel">-</span>)</div>
+                                            <div class="total-amount">-$<span id="discountAmount">0.00</span></div>
+                                        </div>
+                                        <div class="total-row final-total">
+                                            <div class="total-label">TOPLAM</div>
+                                            <div class="total-amount">$<span id="totalAmount">0.00</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Disclaimer -->
+                            <div class="disclaimer">
+                                <strong>UYARI:</strong> Bu faturanın gerçek hayatla herhangi bir ilgisi veya ilişkisi bulunmamaktadır. 
+                                Fatura, tamamıyla hayali bir senaryoya sahip GTA:W Türkiye oyun sunucusu için rolleri desteklemek 
+                                amacıyla hazırlanmakla birlikte herhangi bir resmiyeti, gerçekliği yoktur.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let services = [];
+        let serviceCounter = 0;
+        let currentTheme = 'modern';
+
+        const serviceOptions = {
+            'general': { name: 'Genel Hekimlik Muayenesi', price: 4000 },
+            'specialist': { name: 'Uzmanlık Muayenesi', price: 6000 },
+            'urgent': { name: 'Urgent Care', price: 3000 },
+            'mr': { name: 'MR', price: 5000 },
+            'ct': { name: 'CT (BT)', price: 3500 },
+            'xray': { name: 'Röntgen', price: 1500 },
+            'ultrasound': { name: 'Ultrason', price: 1500 },
+            'bloodtest': { name: 'Laboratuvar Tahlilleri', price: 1000 },
+            'surgery': { name: 'Cerrahi Operasyon', price: 25000, customPrice: true },
+            'hospitalization': { name: 'Yatış (günlük)', price: 1000 },
+            'checkup': { name: 'Genel Check-Up', price: 7500 },
+            'birth': { name: 'Doğum Paketi', price: 45000 }
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            generateInvoiceNumber();
+            document.getElementById('invoiceDate').value = new Date().toISOString().split('T')[0];
+            initTemplateSelector();
+            updatePreview();
+        });
+
+        function generateInvoiceNumber() {
+            const randomNum = Math.floor(Math.random() * 9999) + 1;
+            const invoiceNumber = `SWC-2025-${randomNum.toString().padStart(4, '0')}`;
+            document.getElementById('invoiceNumber').value = invoiceNumber;
+        }
+
+        // Template selector functionality
+        function initTemplateSelector() {
+            const templateOptions = document.querySelectorAll('.template-option');
+            templateOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    templateOptions.forEach(opt => opt.classList.remove('active'));
+                    this.classList.add('active');
+                    currentTheme = this.dataset.theme;
+                    changeTheme(currentTheme);
+                });
+            });
+        }
+
+        function changeTheme(theme) {
+            const preview = document.getElementById('invoicePreview');
+            preview.className = `invoice-preview theme-${theme}`;
+        }
+
+        // Discount functionality
+        function toggleDiscount() {
+            const controls = document.getElementById('discountControls');
+            const chevron = document.getElementById('discountChevron');
+            
+            if (controls.classList.contains('show')) {
+                controls.classList.remove('show');
+                chevron.className = 'fas fa-chevron-down ms-auto';
+            } else {
+                controls.classList.add('show');
+                chevron.className = 'fas fa-chevron-up ms-auto';
+            }
+        }
+
+        // İndirim tipi değiştiğinde maksimum değeri güncelle
+        document.getElementById('discountType').addEventListener('change', function() {
+            const valueInput = document.getElementById('discountValue');
+            if (this.value === 'percent') {
+                valueInput.max = '100';
+                valueInput.placeholder = '%';
+            } else {
+                valueInput.max = '999999';
+                valueInput.placeholder = '$';
+            }
+            updatePreview();
+        });
+
+        function addService() {
+            const selectElement = document.getElementById('serviceSelect');
+            const selectedValue = selectElement.value;
+            
+            if (!selectedValue) {
+                alert('Lütfen bir hizmet seçiniz!');
+                return;
+            }
+
+            const [serviceKey, defaultPrice] = selectedValue.split('|');
+            const service = serviceOptions[serviceKey];
+            
+            const newService = {
+                id: ++serviceCounter,
+                key: serviceKey,
+                name: service.name,
+                price: parseInt(defaultPrice),
+                quantity: 1,
+                customPrice: service.customPrice || false
+            };
+
+            services.push(newService);
+            renderSelectedServices();
+            selectElement.value = '';
+            updatePreview();
+        }
+
+        function renderSelectedServices() {
+            const container = document.getElementById('selectedServices');
+            
+            if (services.length === 0) {
+                container.innerHTML = '<div class="text-muted small mt-2">Seçilen hizmet yok</div>';
+                return;
+            }
+
+            let html = '<div class="mt-3"><small class="text-muted">Seçilen Hizmetler:</small></div>';
+            services.forEach(service => {
+                html += `
+                    <div class="service-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="flex-grow-1">
+                                <div class="fw-medium">${service.name}</div>
+                                <div class="d-flex gap-2 mt-2">
+                                    <div style="width: 80px;">
+                                        <input type="number" class="form-control form-control-sm" 
+                                               value="${service.quantity}" min="1" max="99"
+                                               onchange="updateServiceQuantity(${service.id}, this.value)"
+                                               placeholder="Adet">
+                                    </div>
+                                    <div style="width: 100px;">
+                                        ${service.customPrice ? 
+                                            `<input type="number" class="form-control form-control-sm" 
+                                                     value="${service.price}" min="1000" max="100000" step="1000"
+                                                     onchange="updateServicePrice(${service.id}, this.value)"
+                                                     placeholder="Fiyat">` :
+                                            `<input type="text" class="form-control form-control-sm" 
+                                                     value="$${service.price.toLocaleString()}" readonly>`
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn btn-outline-danger btn-sm ms-2" onclick="removeService(${service.id})">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        function updateServiceQuantity(id, quantity) {
+            const service = services.find(s => s.id === id);
+            if (service) {
+                service.quantity = Math.max(1, parseInt(quantity) || 1);
+                updatePreview();
+            }
+        }
+
+        function updateServicePrice(id, price) {
+            const service = services.find(s => s.id === id);
+            if (service) {
+                service.price = Math.max(1000, parseInt(price) || 1000);
+                updatePreview();
+            }
+        }
+
+        function removeService(id) {
+            services = services.filter(s => s.id !== id);
+            renderSelectedServices();
+            updatePreview();
+        }
+
+        function calculateDiscount(subtotal) {
+            const discountType = document.getElementById('discountType').value;
+            const discountValue = parseFloat(document.getElementById('discountValue').value) || 0;
+            
+            if (discountValue <= 0) return { amount: 0, label: '0%' };
+            
+            let discountAmount = 0;
+            let discountLabel = '';
+            
+            if (discountType === 'percent') {
+                const percentage = Math.min(discountValue, 100);
+                discountAmount = (subtotal * percentage) / 100;
+                discountLabel = `${percentage}%`;
+            } else {
+                discountAmount = Math.min(discountValue, subtotal);
+                discountLabel = `$${discountValue}`;
+            }
+            
+            return { amount: discountAmount, label: discountLabel };
+        }
+
+        function updatePreview() {
+            // Update invoice details
+            document.getElementById('previewInvoiceNumber').textContent = 
+                document.getElementById('invoiceNumber').value || '-';
+            
+            const dateValue = document.getElementById('invoiceDate').value;
+            if (dateValue) {
+                const date = new Date(dateValue);
+                const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                document.getElementById('previewDate').textContent = 
+                    date.toLocaleDateString('tr-TR', options);
+            } else {
+                document.getElementById('previewDate').textContent = '-';
+            }
+            
+            // Update patient info
+            document.getElementById('previewPatientName').textContent = 
+                document.getElementById('patientName').value || '-';
+            document.getElementById('previewPatientPhone').textContent = 
+                document.getElementById('patientPhone').value || '-';
+            document.getElementById('previewNotes').textContent = 
+                document.getElementById('notes').value || '-';
+
+            // Update services table
+            const tbody = document.getElementById('previewServices');
+            
+            if (services.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="no-services">Henüz hizmet eklenmedi</td></tr>';
+                document.getElementById('subtotalAmount').textContent = '0.00';
+                document.getElementById('totalAmount').textContent = '0.00';
+                document.getElementById('discountRow').style.display = 'none';
+            } else {
+                let html = '';
+                let subtotal = 0;
+                
+                services.forEach(service => {
+                    const serviceTotal = service.price * service.quantity;
+                    subtotal += serviceTotal;
+                    
+                    html += `
+                        <tr>
+                            <td>${service.name}</td>
+                            <td style="text-align: center;">${service.quantity}</td>
+                            <td style="text-align: right;">$${service.price.toLocaleString()}</td>
+                            <td style="text-align: right;">$${serviceTotal.toLocaleString()}</td>
+                        </tr>
+                    `;
+                });
+                
+                tbody.innerHTML = html;
+                document.getElementById('subtotalAmount').textContent = subtotal.toLocaleString() + '.00';
+                
+                // Calculate discount
+                const discount = calculateDiscount(subtotal);
+                const total = subtotal - discount.amount;
+                
+                if (discount.amount > 0) {
+                    document.getElementById('discountRow').style.display = 'flex';
+                    document.getElementById('discountLabel').textContent = discount.label;
+                    document.getElementById('discountAmount').textContent = discount.amount.toLocaleString() + '.00';
+                } else {
+                    document.getElementById('discountRow').style.display = 'none';
+                }
+                
+                document.getElementById('totalAmount').textContent = total.toLocaleString() + '.00';
+            }
+        }
+
+        function downloadAsImage() {
+            const element = document.getElementById('invoicePreview');
+            const patientName = document.getElementById('patientName').value || 'Hasta';
+            const invoiceNumber = document.getElementById('invoiceNumber').value;
+            
+            html2canvas(element, {
+                scale: 2,
+                useCORS: true,
+                allowTaint: true,
+                backgroundColor: '#ffffff',
+                logging: false,
+                imageTimeout: 0,
+                removeContainer: false
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `Serenity-${invoiceNumber}-${patientName.replace(/\s+/g, '_')}.png`;
+                link.href = canvas.toDataURL('image/png', 1.0);
+                link.click();
+            }).catch(error => {
+                console.error('Resim indirme hatası:', error);
+                alert('Resim indirme sırasında bir hata oluştu. Lütfen tekrar deneyiniz.');
+            });
+        }
+
+        function printInvoice() {
+            window.print();
+        }
+
+        function resetForm() {
+            document.getElementById('patientName').value = '';
+            document.getElementById('patientPhone').value = '';
+            document.getElementById('notes').value = '';
+            document.getElementById('discountValue').value = '0';
+            document.getElementById('discountReason').value = '';
+            document.getElementById('discountControls').classList.remove('show');
+            document.getElementById('discountChevron').className = 'fas fa-chevron-down ms-auto';
+            services = [];
+            serviceCounter = 0;
+            generateInvoiceNumber();
+            document.getElementById('invoiceDate').value = new Date().toISOString().split('T')[0];
+            renderSelectedServices();
+            updatePreview();
+        }
+
+        // Auto update preview when form fields change
+        document.addEventListener('input', function(e) {
+            if (e.target.matches('#patientName, #patientPhone, #notes, #invoiceDate, #discountValue')) {
+                updatePreview();
+            }
+        });
+    </script>
+</body>
+</html>
